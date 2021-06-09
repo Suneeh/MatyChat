@@ -1,0 +1,3 @@
+insert into tUser(kUser,cUsername,cMail,bConfirmed,cPassword,dLastActive,cDescription,cProfilePicturePath) values('1','Suneeh','qu.langer@gmail.com','1','123456789','2021-06-05 13:33:37','hello its me','not found');
+insert into tUser(kUser,cUsername,cMail,bConfirmed,cPassword,dLastActive,cDescription,cProfilePicturePath) values('2','Martin','martin@martin.de','1','123456789','2021-06-05 13:33:37','hello its him','not found');
+insert into tUser(kUser,cUsername,cMail,bConfirmed,cPassword,dLastActive,cDescription,cProfilePicturePath) values('3','Tobi','Tobi@s.de','1','123456789','2021-06-05 13:33:37','hello its him again','not found');
