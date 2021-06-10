@@ -1,65 +1,128 @@
-const { response } = require('express');
-const express = require('express');
+const { response } = require("express");
+const express = require("express");
+
+
 const app = express();
 
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-    host     : '46.38.249.171',
-    user     : 'k140427_matyChat',
-    password : 'ilsA927$U!t2l7n8',
-    database : 'k140427_matyChat'
-});
-connection.connect();
+const db = require('./helper/database.js');
 
-app.get('/ruok', function (req, res) {
-  res.send('Im Fine!');
+
+
+app.get("/ruok", function (req, res) {
+  res.send("Im Fine!");
 });
 
 
-app.get('/api/v1/user', function (req, res) {
-  if(req.query.id){
-    getUser(req.query.id, function (error, results, fields) {
-      if (error) console.log(error);
+
+/*
+  * ================================================================================================
+  * USER
+  * ================================================================================================
+*/
+app.get("/api/v1/user", function (req, res) {
+  if (req.query.kUser) {
+    db.getUser(
+      req.query.kUser, 
+      function (error, results, fields) {
+      if (error) {
+        console.log(error);
+      }
       res.json(results);
     });
   }
 });
-function getUser(id, callback){
-  connection.query('SELECT * FROM tUser WHERE kUser = ?', [id], callback);
-}
+
+app.post("/api/v1/user", function (req, res) {
+    db.postUser(
+      req.query.cUsername,
+      req.query.cMail,
+      req.query.cPasswort,
+      function (error, results, fields) {
+        if (error) console.log(error);
+        res.json(results);
+    });
+});
 
 
 
 
+/*
+  * ================================================================================================
+  * MESSAGE
+  * ================================================================================================
+*/
+
+/*
+  * takes the kReceivingChat 
+  * @returns all messages in the Chat
+*/
 app.get('/api/v1/message', function (req, res) {
-  if(req.query.id){
-    getMessage(req.query.id, function (error, results, fields) {
-      if (error) console.log(error);
-      res.json(results);
-    });
+  if (req.query.kReceivingChat) {
+      db.getMessage(
+        req.query.kReceivingChat, 
+        function (error, results, fields) {
+          if (error) {
+            console.log(error);
+          }
+          res.json(results);
+      });
+  } else {
+      res.json({ "message": "Try giving me an ID!"});
   }
 });
 
+/*
+  * takes UserID 
+  * takes ChatID 
+  * takes Crated Time 
+  * takes Message
+  * @returns rows affected
+*/
 app.post('/api/v1/message', function (req, res) {
-  //if(req.query.id){
-    postMessage(req.query.userId, req.query.chatId, req.query.created, req.query.message, function (error, results, fields) {
-      if (error) console.log(error);
+  db.postMessage(
+    req.query.kSendingUser, 
+    req.query.kReceivingChat, 
+    req.query.dCreated, 
+    req.query.message, 
+    function (error, results, fields) {
+      if (error) {
+        console.log(error);
+      }
       res.json(results);
-    });
-  //}
+  });
 });
 
-function getMessage(id, callback){
-  connection.query('SELECT * FROM tMessage WHERE kReceivingChat = ?', [id], callback);
-}
 
-function postMessage(userId, chatId, created, message, callback){
-  // TODO : hier muss noch Content gehandelt werden
-  let cContentPath = "";
-  connection.query(
-    'INSERT INTO tMessage (kSendingUser, kReceivingChat, dReceivedByServer, dCreated, cContentPath, cContentText) VALUES(?, ?, NOW(), ?, ?, ?) ',
-    [userId, chatId, created, cContentPath, message], callback
-  );
-}
+/*
+  * ================================================================================================
+  * Chat
+  * ================================================================================================
+*/
 
-app.listen(3000);
+/*
+  * 
+  * @returns
+*/
+app.get('/api/v1/chat', function (req, res) {
+  
+});
+
+/*
+  * 
+  * 
+  * 
+  * 
+  * @returns 
+*/
+app.post('/api/v1/chat', function (req, res) {
+  db.postChat(
+    req.query.cName,
+    req.query.cDescription,
+    function(error, results, fields){
+      if (error) console.log(error);
+      res.json(results);
+    }
+  )
+});
+
+app.listen(187);

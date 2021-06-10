@@ -1,12 +1,14 @@
-DROP TABLE IF EXISTS tBlockList;
+SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE IF EXISTS tChatUser;
+DROP TABLE IF EXISTS tUser;
+DROP TABLE IF EXISTS tChat;
 DROP TABLE IF EXISTS tMessage;
 DROP TABLE IF EXISTS tSetting;
+DROP TABLE IF EXISTS tBlockList;
 DROP TABLE IF EXISTS tSettingValue;
-DROP TABLE IF EXISTS tChat;
-DROP TABLE IF EXISTS tUser;
-
+SET FOREIGN_KEY_CHECKS=1;
 CREATE TABLE tUser (
-    kUser INT PRIMARY KEY,
+    kUser INT PRIMARY KEY AUTO_INCREMENT,
     cUsername VARCHAR(32) NOT NULL COMMENT 'alias of the user',
     cMail VARCHAR(64) NOT NULL COMMENT 'mail address  of the user',
     bConfirmed BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'is true when the mail got confirmed',
@@ -17,14 +19,14 @@ CREATE TABLE tUser (
 );
 
 CREATE TABLE tChat (
-    kChat INT PRIMARY KEY,
+    kChat INT PRIMARY KEY AUTO_INCREMENT,
     cName VARCHAR(32) COMMENT 'shown name of the group (not set for 1on1 conversations)',
     cDescription VARCHAR(10000) COMMENT 'shown description of the group',
     cPicturePath VARCHAR(256) COMMENT 'path of the group picture',
     dErstellt DATETIME NOT NULL COMMENT 'creation date of the group'
 );
 CREATE TABLE tChatUser (
-	kChatUser INT PRIMARY KEY,
+	kChatUser INT PRIMARY KEY AUTO_INCREMENT,
 	kChat INT NOT NULL,
 	kUser INT NOT NULL,
 
@@ -50,13 +52,13 @@ CREATE TABLE tMessage (
 );
 
 CREATE TABLE tSetting (
-    kSetting INT PRIMARY KEY,
+    kSetting INT PRIMARY KEY AUTO_INCREMENT,
     cSettingName VARCHAR(32) NOT NULL COMMENT 'UI display name of the setting',
     cValues VARCHAR(1024) COMMENT 'list of possible values for this setting, if applicable, otherwise NULL'
 );
 
 CREATE TABLE tSettingValue (
-    kSettingValue INT PRIMARY KEY,
+    kSettingValue INT PRIMARY KEY AUTO_INCREMENT,
     kUser INT NOT NULL COMMENT 'user to which this setting value belongs to',
     kSetting INT NOT NULL COMMENT 'ths setting of which this is a value of',
     cVarChar VARCHAR(64) NOT NULL COMMENT 'the value of the setting, stored as a string',
@@ -66,7 +68,7 @@ CREATE TABLE tSettingValue (
 );
 
 CREATE TABLE tBlockList (
-    kBlockList INT PRIMARY KEY,
+    kBlockList INT PRIMARY KEY AUTO_INCREMENT,
     kBlocker INT NOT NULL COMMENT 'this user blocked the other user, only this user can remove the block',
     kBlockee INT NOT NULL COMMENT 'this user got blocked',
     
